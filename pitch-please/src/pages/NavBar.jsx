@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import '../styles/NavBar.css'
 import icon from '../assets/pp_logo.png'
 
@@ -5,15 +6,15 @@ function NavBar() {
     return (
         <>
             <nav className="navbar">
-                <div className="logo">
+                <Link to="/" className="logo">
                     <img src={icon} className='icon'/>
                     <div className="text">Pitch, Please!</div>
-                </div>
+                </Link>
                 <ul className="tabs">
-                    <li className="tab"><p>About</p></li>
-                    <li className="tab"><p>Gallery</p></li>
-                    <li className="tab"><p>Members</p></li>
-                    <li className="tab"><p>Contact Us</p></li>
+                    <li className="tab"><Link to="/about"><p>About</p></Link></li>
+                    <li className="tab"><Link to="/gallery"><p>Gallery</p></Link></li>
+                    <li className="tab"><Link to="/members"><p>Members</p></Link></li>
+                    <li className="tab"><Link to="/contact-us"><p>Contact Us</p></Link></li>
                 </ul>
             </nav>
         </>

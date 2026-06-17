@@ -1,5 +1,9 @@
 function Gallery() {
-    return(<></>)
+  return (
+    <>
+      <p>GALLERY</p>
+    </>
+  );
 }
 
-export default Gallery
+export default Gallery;

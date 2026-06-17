@@ -1,5 +1,9 @@
 function Members() {
-    return(<></>)
+  return (
+    <>
+      <p>MEMBERS</p>
+    </>
+  );
 }
 
-export default Members
+export default Members;

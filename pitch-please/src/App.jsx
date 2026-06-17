@@ -13,8 +13,6 @@ function App() {
     <>
         <BrowserRouter>
             <Navbar />
-            <h1>This is the new PP website! Work in Progress.</h1>
-
             <Routes>
                 <Route path = '/' element={<Home />} />
                 <Route path = '/about' element={<About />} />

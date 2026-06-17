@@ -1,5 +1,9 @@
 function Contact() {
-    return(<></>)
+  return (
+    <>
+      <p>CONTACT</p>
+    </>
+  );
 }
 
-export default Contact
+export default Contact;

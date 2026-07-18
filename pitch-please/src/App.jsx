@@ -1,11 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import Navbar from "./pages/NavBar";
+import Navbar from "./components/NavBar";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Gallery from "./pages/Gallery";
 import Members from "./pages/Members";
 import Contact from "./pages/Contact";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/members" element={<Members />} />
           <Route path="/contact-us" element={<Contact />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </>
   );

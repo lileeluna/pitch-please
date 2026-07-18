@@ -1,0 +1,31 @@
+.footer {
+  background: #60132e;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1rem;
+}
+
+.soc-med-icons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.soc-med-link {
+  display: flex;
+  align-items: center;
+}
+
+.soc-med-icon {
+  aspect-ratio: 1;
+  height: 2rem;
+  display: block;
+}
+
+.footer-location {
+  font-family: "Antic", sans-serif;
+  color: #ffffff;
+}

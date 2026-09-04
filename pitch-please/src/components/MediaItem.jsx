@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const API_BASE = "";
 
-function MediaItem({ item, type, onDelete }) {
+function MediaItem({ item, type, canEdit, onDelete }) {
   const [expanded, setExpanded] = useState(false);
 
   const handleDelete = async (e) => {
@@ -14,6 +14,9 @@ function MediaItem({ item, type, onDelete }) {
       });
       if (res.ok) {
         onDelete(item.id);
+      } else {
+        const data = await res.json().catch(() => null);
+        alert((data && data.error) || "Delete failed.");
       }
     } catch {
       alert("Delete failed.");
@@ -32,9 +35,15 @@ function MediaItem({ item, type, onDelete }) {
         ) : (
           <video src={`${API_BASE}${item.url}`} muted />
         )}
-        <button className="delete-btn" onClick={handleDelete} title="Delete">
-          &times;
-        </button>
+        {canEdit && (
+          <button
+            className="delete-btn"
+            onClick={handleDelete}
+            title="Delete"
+          >
+            &times;
+          </button>
+        )}
       </div>
 
       {expanded && (

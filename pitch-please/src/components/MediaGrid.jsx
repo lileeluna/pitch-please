@@ -4,7 +4,7 @@ import MediaItem from "./MediaItem";
 
 const API_BASE = "";
 
-function MediaGrid({ type }) {
+function MediaGrid({ type, canEdit }) {
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -55,13 +55,22 @@ function MediaGrid({ type }) {
   return (
     <div className="media-grid-section">
       <div className="media-grid">
-        <UploadCell type={type} onUpload={handleUpload} />
+        {canEdit && <UploadCell type={type} onUpload={handleUpload} />}
 
         {loading ? (
           <div className="grid-loading">Loading...</div>
         ) : items.length === 0 ? (
           <div className="grid-empty">
-            No {type === "photo" ? "photos" : "videos"} yet
+            {canEdit ? (
+              <>
+                No {type === "photo" ? "photos" : "videos"} yet; use the +
+                tile above to add one.
+              </>
+            ) : (
+              <>
+                No {type === "photo" ? "photos" : "videos"} yet
+              </>
+            )}
           </div>
         ) : (
           items.map((item) => (
@@ -69,6 +78,7 @@ function MediaGrid({ type }) {
               key={item.id}
               item={item}
               type={type}
+              canEdit={canEdit}
               onDelete={handleDelete}
             />
           ))

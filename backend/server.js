@@ -5,6 +5,7 @@ const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 const Database = require("better-sqlite3");
 const fs = require("fs");
+const crypto = require("crypto");
 
 const photosDir = path.join(__dirname, "uploads", "photos");
 const videosDir = path.join(__dirname, "uploads", "videos");
@@ -40,24 +41,143 @@ db.exec(`
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )
 `);
+db.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+db.exec(`
+  CREATE TABLE IF NOT EXISTS sessions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    token TEXT NOT NULL UNIQUE,
+    user_id INTEGER NOT NULL,
+    expires_at INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
+const userCount = db.prepare("SELECT COUNT(*) AS c FROM users").get().c;
+if (userCount === 0) {
+  const seedUsername = process.env.ADMIN_USERNAME || "admin";
+  const seedPassword = process.env.ADMIN_PASSWORD || "pitchplease";
+  db.prepare("INSERT INTO users (username, password_hash) VALUES (?, ?)").run(
+    seedUsername,
+    hashPassword(seedPassword),
+  );
+  console.log(`Seeded default admin user "${seedUsername}".`);
+}
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+const SESSION_COOKIE = "pp_session";
+const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+function hashPassword(password, salt = crypto.randomBytes(16).toString("hex")) {
+  const hash = crypto.scryptSync(password, salt, 64).toString("hex");
+  return `${salt}:${hash}`;
+}
+
+function verifyPassword(password, stored) {
+  const parts = typeof stored === "string" ? stored.split(":") : [];
+  if (parts.length !== 2) return false;
+  const candidate = crypto.scryptSync(password, parts[0], 64);
+  const actual = Buffer.from(parts[1], "hex");
+  return (
+    candidate.length === actual.length &&
+    crypto.timingSafeEqual(candidate, actual)
+  );
+}
+
+function parseCookies(req) {
+  const cookies = {};
+  const raw = req.headers.cookie;
+  if (!raw) return cookies;
+  for (const part of raw.split(";")) {
+    const idx = part.indexOf("=");
+    if (idx === -1) continue;
+    const key = part.slice(0, idx).trim();
+    const value = part.slice(idx + 1).trim();
+    if (key) cookies[key] = decodeURIComponent(value);
+  }
+  return cookies;
+}
+
+function currentUser(req) {
+  const token = parseCookies(req)[SESSION_COOKIE];
+  if (!token) return null;
+  return (
+    db
+      .prepare(
+        `SELECT s.token, u.id, u.username FROM sessions s
+         JOIN users u ON u.id = s.user_id
+         WHERE s.token = ? AND s.expires_at > ?`,
+      )
+      .get(token, Date.now()) || null
+  );
+}
+
 function isAuthorized(req) {
-  return true;
+  return Boolean(currentUser(req));
 }
 
 function requireAuth(req, res, next) {
   if (!isAuthorized(req)) {
-    return res.status(401).json({ error: "Unauthorized." });
+    return res.status(401).json({ error: "Unauthorized. Please log in." });
   }
   next();
 }
 
+function sessionCookie(token) {
+  return `${SESSION_COOKIE}=${token}; HttpOnly; Path=/; SameSite=Lax; Max-Age=${Math.floor(
+    SESSION_TTL_MS / 1000,
+  )}`;
+}
+
+app.post("/api/auth/login", (req, res) => {
+  const username = typeof req.body.username === "string" ? req.body.username.trim() : "";
+  const password = typeof req.body.password === "string" ? req.body.password : "";
+  if (!username || !password) {
+    return res.status(400).json({ error: "Username and password are required." });
+  }
+
+  const user = db.prepare("SELECT * FROM users WHERE username = ?").get(username);
+  if (!user || !verifyPassword(password, user.password_hash)) {
+    return res.status(401).json({ error: "Invalid username or password." });
+  }
+
+  db.prepare("DELETE FROM sessions WHERE expires_at <= ?").run(Date.now());
+  const token = uuidv4();
+  db.prepare("INSERT INTO sessions (token, user_id, expires_at) VALUES (?, ?, ?)").run(
+    token,
+    user.id,
+    Date.now() + SESSION_TTL_MS,
+  );
+
+  res.setHeader("Set-Cookie", sessionCookie(token));
+  res.json({ success: true, username: user.username });
+});
+
+app.post("/api/auth/logout", (req, res) => {
+  const token = parseCookies(req)[SESSION_COOKIE];
+  if (token) {
+    db.prepare("DELETE FROM sessions WHERE token = ?").run(token);
+  }
+  res.setHeader("Set-Cookie", `${SESSION_COOKIE}=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0`);
+  res.json({ success: true });
+});
+
 app.get("/api/auth/status", (req, res) => {
-  res.json({ authorized: isAuthorized(req) });
+  const user = currentUser(req);
+  if (user) {
+    res.json({ authorized: true, username: user.username });
+  } else {
+    res.json({ authorized: false, username: null });
+  }
 });
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -134,7 +254,7 @@ const memberUpload = multer({
   limits: { fileSize: 50 * 1024 * 1024 },
 });
 
-app.post("/api/upload", (req, res) => {
+app.post("/api/upload", requireAuth, (req, res) => {
   upload.single("file")(req, res, (err) => {
     if (err) {
       if (err instanceof multer.MulterError) {
@@ -206,7 +326,7 @@ app.get("/api/media", (req, res) => {
   });
 });
 
-app.delete("/api/media/:id", (req, res) => {
+app.delete("/api/media/:id", requireAuth, (req, res) => {
   const stmt = db.prepare("SELECT * FROM media WHERE id = ?");
   const item = stmt.get(req.params.id);
 

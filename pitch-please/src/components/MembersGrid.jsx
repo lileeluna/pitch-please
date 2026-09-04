@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import MemberCard from "./MemberCard";
 import MemberEditor from "./MemberEditor";
+import LoginModal from "./LoginModal";
+import AuthBar from "./AuthBar";
+import useAuth from "../hooks/useAuth";
 
 const API_BASE = "";
 
@@ -24,7 +27,8 @@ function MembersGrid() {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadFailed, setLoadFailed] = useState(false);
-  const [canEdit, setCanEdit] = useState(false);
+  const { canEdit, username, login, logout } = useAuth();
+  const [showLogin, setShowLogin] = useState(false);
   const [editing, setEditing] = useState(null);
 
   useEffect(() => {
@@ -44,21 +48,6 @@ function MembersGrid() {
         console.error("Failed to load members. Is the backend running?");
         setLoadFailed(true);
         setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch(`${API_BASE}/api/auth/status`)
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (!cancelled) setCanEdit(Boolean(data && data.authorized));
-      })
-      .catch(() => {
-        if (!cancelled) setCanEdit(false);
       });
     return () => {
       cancelled = true;
@@ -153,6 +142,13 @@ function MembersGrid() {
 
   return (
     <>
+      <AuthBar
+        canEdit={canEdit}
+        username={username}
+        onLoginClick={() => setShowLogin(true)}
+        onLogout={logout}
+      />
+
       <section className="members-grid">
         {loading ? (
           <div className="member-grid-note">Loading...</div>
@@ -202,6 +198,16 @@ function MembersGrid() {
           onSave={saveMember}
           onDelete={() => deleteMember(editing.member.id)}
           onClose={closeEditor}
+        />
+      )}
+
+      {showLogin && (
+        <LoginModal
+          onClose={() => setShowLogin(false)}
+          onLogin={(name) => {
+            login(name);
+            setShowLogin(false);
+          }}
         />
       )}
     </>

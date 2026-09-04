@@ -312,3 +312,39 @@
   color: #fff;
 }
 
+
+/* ---- Login / auth bar ---- */
+.member-auth-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 3rem 0;
+  font-family: "Antic", sans-serif;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.auth-btn {
+  padding: 0.4rem 1.2rem;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  background: #fff;
+  color: #222;
+  cursor: pointer;
+  font-family: "Aoboshi One", serif;
+  font-size: 0.95rem;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.auth-btn:hover {
+  background: #f0f0f0;
+  border-color: #888;
+}
+
+.login-error {
+  font-family: "Antic", sans-serif;
+  color: #b30000;
+  margin-bottom: 1rem;
+}
+

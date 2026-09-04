@@ -34,6 +34,7 @@ function useAuth() {
     try {
       await fetch(`${API_BASE}/api/auth/logout`, { method: "POST" });
     } catch {
+      console.warn("Logout request failed; clearing local session state.");
     }
     setUsername(null);
     setCanEdit(false);

@@ -11,31 +11,40 @@ function Contact() {
           <h1 className="contact-title">CONTACT US</h1>
         </div>
         <section className="contact-content">
-          <div className="contact-left">
+          <form
+            className="contact-left"
+            action="https://formspree.io/f/xljelaag"
+            method="POST"
+          >
             <div className="header-row">
               <div className="header-label">Name</div>
               <div className="header-label">Email</div>
             </div>
             <div className="input-row">
-              <input type="text" className="half-row" />
-              <input type="text" className="half-row" />
+              <input type="text" name="name" className="half-row" />
+              <input type="email" name="email" className="half-row" />
             </div>
             <div className="header-row">
               <div className="header-label">Subject</div>
             </div>
             <div className="input-row">
-              <input type="text" className="full-row" />
+              <input type="text" name="subject" className="full-row" />
             </div>
             <div className="header-row">
               <div className="header-label">Message</div>
             </div>
             <div className="input-row">
-              <textarea className="full-row message-box"></textarea>
+              <textarea
+                name="message"
+                className="full-row message-box"
+              ></textarea>
             </div>
             <div className="submit-row">
-              <div className="submit-btn">Submit</div>
+              <button type="submit" className="submit-btn">
+                Submit
+              </button>
             </div>
-          </div>
+          </form>
           <div className="contact-right">
             <p>
               Have any questions for us? Please feel free to reach out on our

@@ -75,3 +75,240 @@
   font-style: italic;
   text-align: left;
 }
+
+/* ---- Members grid loading/empty states ---- */
+.member-grid-note {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  font-family: "Aoboshi One", serif;
+  color: #999;
+}
+
+.member-square {
+  position: relative;
+}
+
+.member-img {
+  overflow: hidden;
+}
+
+.member-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---- Edit affordances (shown when the visitor may edit) ---- */
+.member-edit-btn {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 5;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 4px 12px;
+  font-family: "Antic", sans-serif;
+  font-size: 1.1rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s;
+}
+
+.member-square:hover .member-edit-btn,
+.member-edit-btn:focus-visible {
+  opacity: 1;
+}
+
+.member-edit-btn:hover {
+  background: rgba(0, 0, 0, 0.85);
+}
+
+/* ---- Add Member tile ---- */
+.member-add-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  width: 100%;
+  min-height: 25rem;
+  border: none;
+  border-radius: 4px;
+  background: #7b7b7b;
+  color: rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  font-family: "Aoboshi One", serif;
+  transition: background 0.2s;
+}
+
+.member-add-cell:hover {
+  background: #656565;
+}
+
+.member-add-cell .add-icon {
+  font-size: 3rem;
+  line-height: 1;
+  font-weight: 300;
+}
+
+.member-add-cell small {
+  font-size: 0.85rem;
+}
+
+/* ---- Member editor modal ---- */
+.member-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.member-editor {
+  position: relative;
+  background: #fff;
+  width: min(44rem, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 8px;
+  padding: 2.5rem 2rem 2rem;
+  color: #222;
+}
+
+.member-editor-close {
+  position: absolute;
+  top: 0.6rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 2.2rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #666;
+}
+
+.member-editor-close:hover {
+  color: #000;
+}
+
+.member-editor-title {
+  font-family: "Aoboshi One", serif;
+  font-size: 2rem;
+  margin: 0 0 1.5rem;
+}
+
+.editor-photo {
+  width: 10rem;
+  height: 10rem;
+  margin: 0 auto 1rem;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #d9d9d9;
+}
+
+.editor-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.editor-photo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-family: "Antic", sans-serif;
+  color: #777;
+}
+
+.editor-field {
+  display: block;
+  margin-bottom: 1rem;
+  font-family: "Antic", sans-serif;
+}
+
+.editor-field > span {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.editor-field input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.75rem;
+  font-family: "Antic", sans-serif;
+  font-size: 1.1rem;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+}
+
+.editor-field input[type="file"] {
+  font-family: "Antic", sans-serif;
+  font-size: 1rem;
+}
+
+.editor-hint {
+  display: block;
+  font-size: 0.95rem;
+  color: #777;
+  margin-top: 0.25rem;
+}
+
+.editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.editor-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  background: #fff;
+  color: #222;
+  cursor: pointer;
+  font-family: "Aoboshi One", serif;
+  font-size: 0.95rem;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.editor-btn:hover:not(:disabled) {
+  background: #f0f0f0;
+}
+
+.editor-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.editor-save {
+  background: #222;
+  border-color: #222;
+  color: #fff;
+}
+
+.editor-save:hover:not(:disabled) {
+  background: #444;
+}
+
+.editor-delete {
+  border-color: #b30000;
+  color: #b30000;
+}
+
+.editor-delete:hover:not(:disabled) {
+  background: #b30000;
+  color: #fff;
+}
+

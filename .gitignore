@@ -1,6 +1,5 @@
 backend/node_modules
-backend/data/gallery.db-shm
-backend/data/gallery.db-wal
+backend/data/*
 backend/uploads/members/*
 backend/uploads/photos/*
 backend/uploads/videos/*

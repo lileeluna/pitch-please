@@ -5,7 +5,7 @@ import "../styles/Members.css";
 function Members() {
   return (
     <>
-      <div className="container">
+      <div className="member-container">
         <img src={back} className="bg-img"></img>
         <h1 className="member-title">Meet The Pitches!</h1>
         <img src={front} className="front-img"></img>

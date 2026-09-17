@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { MEMBER_FACTS } from "../data/memberFacts";
 
-function MemberPopup({ member, onClose }) {
+function MemberPopup({ member, factsConfig, onClose }) {
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") onClose();
@@ -11,13 +10,16 @@ function MemberPopup({ member, onClose }) {
   }, [onClose]);
 
   const yearJoined = member.year_joined || "";
+  const yearGraduated = member.year_graduated || "";
   const facts = member.facts || {};
 
-  const visibleFacts = MEMBER_FACTS.map((fact) => ({
-    key: fact.key,
-    label: fact.label,
-    value: facts[fact.key],
-  })).filter((fact) => fact.value);
+  const visibleFacts = factsConfig
+    .map((fact) => ({
+      key: fact.key,
+      label: fact.label,
+      value: facts[fact.key],
+    }))
+    .filter((fact) => fact.value);
 
   return (
     <div className="member-overlay" onClick={onClose}>
@@ -55,6 +57,12 @@ function MemberPopup({ member, onClose }) {
             <dd>{member.part || "—"}</dd>
             <dt>Year Joined</dt>
             <dd>{yearJoined || "—"}</dd>
+            {member.is_alumni ? (
+              <>
+                <dt>Year Graduated</dt>
+                <dd>{yearGraduated || "—"}</dd>
+              </>
+            ) : null}
           </dl>
         </div>
 

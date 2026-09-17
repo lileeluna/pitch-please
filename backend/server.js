@@ -52,6 +52,9 @@ function ensureColumn(table, column, definition) {
 ensureColumn("members", "year_joined", "TEXT NOT NULL DEFAULT ''");
 ensureColumn("members", "facts", "TEXT NOT NULL DEFAULT '{}'");
 
+ensureColumn("members", "is_alumni", "INTEGER NOT NULL DEFAULT 0");
+ensureColumn("members", "year_graduated", "TEXT NOT NULL DEFAULT ''");
+
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -393,6 +396,8 @@ function memberToJson(row) {
     part: row.part,
     position: row.position,
     year_joined: row.year_joined || "",
+    year_graduated: row.year_graduated || "",
+    is_alumni: row.is_alumni ? 1 : 0,
     facts: parseFacts(row.facts),
     photo: row.photo,
     photo_url: row.photo ? `/uploads/members/${row.photo}` : null,
@@ -401,11 +406,25 @@ function memberToJson(row) {
   };
 }
 
+function listMembers(isAlumni) {
+  return db
+    .prepare(
+      `SELECT * FROM members
+       WHERE is_alumni = ?
+       ORDER BY sort_order ASC, id ASC`,
+    )
+    .all(isAlumni ? 1 : 0)
+    .map(memberToJson);
+}
+
 app.get("/api/members", (req, res) => {
-  const rows = db
-    .prepare("SELECT * FROM members ORDER BY sort_order ASC, id ASC")
-    .all();
-  res.json({ members: rows.map(memberToJson) });
+  res.json({ members: listMembers(false) });
+});
+
+// Alumni are the same records with is_alumni = 1. The response keeps the
+// { members: [...] } shape so the client grid code works for both.
+app.get("/api/alumni", (req, res) => {
+  res.json({ members: listMembers(true) });
 });
 
 app.use("/api/members", requireAuth);
@@ -422,23 +441,31 @@ app.post("/api/members", (req, res) => {
       : "Member";
   const yearJoined =
     typeof req.body.year_joined === "string" ? req.body.year_joined.trim() : "";
+  const yearGraduated =
+    typeof req.body.year_graduated === "string"
+      ? req.body.year_graduated.trim()
+      : "";
+  const isAlumni = req.body.is_alumni ? 1 : 0;
 
   const { m: maxSort } = db
-    .prepare("SELECT MAX(sort_order) as m FROM members")
-    .get();
+    .prepare("SELECT MAX(sort_order) as m FROM members WHERE is_alumni = ?")
+    .get(isAlumni);
 
   const result = db
     .prepare(
-      `INSERT INTO members (name, part, position, year_joined, facts, sort_order)
-       VALUES (?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO members
+         (name, part, position, year_joined, year_graduated, facts, sort_order, is_alumni)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     )
     .run(
       name,
       part,
       position,
       yearJoined,
+      yearGraduated,
       JSON.stringify(sanitizeFacts(req.body.facts)),
       (maxSort ?? -1) + 1,
+      isAlumni,
     );
 
   const row = db
@@ -467,6 +494,16 @@ app.put("/api/members/:id", (req, res) => {
     typeof req.body.year_joined === "string"
       ? req.body.year_joined.trim()
       : row.year_joined;
+  const yearGraduated =
+    typeof req.body.year_graduated === "string"
+      ? req.body.year_graduated.trim()
+      : row.year_graduated;
+  const isAlumni =
+    req.body.is_alumni === undefined
+      ? row.is_alumni
+      : req.body.is_alumni
+        ? 1
+        : 0;
   const facts =
     req.body.facts === undefined
       ? parseFacts(row.facts)
@@ -478,14 +515,17 @@ app.put("/api/members/:id", (req, res) => {
 
   db.prepare(
     `UPDATE members
-     SET name = ?, part = ?, position = ?, year_joined = ?, facts = ?
+     SET name = ?, part = ?, position = ?, year_joined = ?,
+         year_graduated = ?, facts = ?, is_alumni = ?
      WHERE id = ?`,
   ).run(
     name,
     part,
     position,
     yearJoined,
+    yearGraduated,
     JSON.stringify(facts),
+    isAlumni,
     req.params.id,
   );
 

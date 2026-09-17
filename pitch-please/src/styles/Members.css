@@ -42,6 +42,13 @@
   padding-bottom: 2rem;
 }
 
+.members-section-title {
+  font-family: "Major Mono Display", serif;
+  font-size: 3rem;
+  text-align: center;
+  margin: 3rem 0 0;
+}
+
 .member-square {
   display: flex;
   flex-direction: column;

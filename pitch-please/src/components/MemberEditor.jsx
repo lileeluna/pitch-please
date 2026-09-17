@@ -1,9 +1,11 @@
 import { useState, useRef } from "react";
-import { MEMBER_FACTS } from "../data/memberFacts";
 
 function MemberEditor({
   mode,
   initial,
+  factsConfig,
+  showYearGraduated = false,
+  entityLabel = "Member",
   canMoveUp,
   canMoveDown,
   onMoveUp,
@@ -16,6 +18,9 @@ function MemberEditor({
   const [part, setPart] = useState(initial.part || "");
   const [position, setPosition] = useState(initial.position || "Member");
   const [yearJoined, setYearJoined] = useState(initial.year_joined || "");
+  const [yearGraduated, setYearGraduated] = useState(
+    initial.year_graduated || "",
+  );
   const [facts, setFacts] = useState(initial.facts || {});
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("");
@@ -50,8 +55,9 @@ function MemberEditor({
         {
           name: name.trim(),
           part: part.trim(),
-          position: position.trim() || "Member",
+          position: position.trim() || entityLabel,
           year_joined: yearJoined.trim(),
+          year_graduated: yearGraduated.trim(),
           facts: Object.fromEntries(
             Object.entries(facts).map(([key, value]) => [
               key,
@@ -100,12 +106,12 @@ function MemberEditor({
         </button>
 
         <h2 className="member-editor-title">
-          {isNew ? "Add Member" : "Edit Member"}
+          {isNew ? `Add ${entityLabel}` : `Edit ${entityLabel}`}
         </h2>
 
         <div className="editor-photo">
           {preview ? (
-            <img src={preview} alt="Member photo preview" />
+            <img src={preview} alt={`${entityLabel} photo preview`} />
           ) : (
             <div className="editor-photo-placeholder">No photo</div>
           )}
@@ -183,12 +189,28 @@ function MemberEditor({
           />
         </label>
 
+        {showYearGraduated && (
+          <label className="editor-field">
+            <span>Year Graduated</span>
+            <input
+              type="text"
+              inputMode="numeric"
+              maxLength={4}
+              value={yearGraduated}
+              onChange={(e) =>
+                setYearGraduated(e.target.value.replace(/\D/g, "").slice(0, 4))
+              }
+              placeholder="e.g. 2026"
+            />
+          </label>
+        )}
+
         <fieldset className="editor-facts">
           <legend>Fun Facts &amp; Favorites</legend>
           <p className="editor-hint">
             These fields are defined in <code>src/data/memberFacts.js</code>.
           </p>
-          {MEMBER_FACTS.map((fact) => (
+          {factsConfig.map((fact) => (
             <label className="editor-field" key={fact.key}>
               <span>{fact.label}</span>
               <input
@@ -208,7 +230,7 @@ function MemberEditor({
             onClick={handleSave}
             disabled={busy}
           >
-            {busy ? "Saving..." : isNew ? "Add Member" : "Save Changes"}
+            {busy ? "Saving..." : isNew ? `Add ${entityLabel}` : "Save Changes"}
           </button>
 
           {!isNew && (
@@ -235,7 +257,7 @@ function MemberEditor({
                 onClick={handleDelete}
                 disabled={busy}
               >
-                Delete Member
+                Delete {entityLabel}
               </button>
             </>
           )}

@@ -76,7 +76,6 @@
   text-align: left;
 }
 
-/* ---- Members grid loading/empty states ---- */
 .member-grid-note {
   grid-column: 1 / -1;
   text-align: center;
@@ -100,7 +99,6 @@
   display: block;
 }
 
-/* ---- Edit affordances (shown when the visitor may edit) ---- */
 .member-edit-btn {
   position: absolute;
   top: 8px;
@@ -127,7 +125,6 @@
   background: rgba(0, 0, 0, 0.85);
 }
 
-/* ---- Add Member tile ---- */
 .member-add-cell {
   display: flex;
   flex-direction: column;
@@ -138,7 +135,7 @@
   min-height: 25rem;
   border: none;
   border-radius: 4px;
-  background: #7b7b7b;
+  background: #333;
   color: rgba(0, 0, 0, 0.55);
   cursor: pointer;
   font-family: "Aoboshi One", serif;
@@ -146,20 +143,20 @@
 }
 
 .member-add-cell:hover {
-  background: #656565;
+  background: #111;
 }
 
 .member-add-cell .add-icon {
   font-size: 3rem;
   line-height: 1;
   font-weight: 300;
+  color: #ccc;
 }
 
 .member-add-cell small {
   font-size: 0.85rem;
 }
 
-/* ---- Member editor modal ---- */
 .member-overlay {
   position: fixed;
   inset: 0;
@@ -173,13 +170,12 @@
 
 .member-editor {
   position: relative;
-  background: #fff;
+  background: #222;
   width: min(44rem, 100%);
   max-height: 90vh;
   overflow-y: auto;
   border-radius: 8px;
   padding: 2.5rem 2rem 2rem;
-  color: #222;
 }
 
 .member-editor-close {
@@ -210,7 +206,6 @@
   margin: 0 auto 1rem;
   border-radius: 6px;
   overflow: hidden;
-  background: #d9d9d9;
 }
 
 .editor-photo img {
@@ -252,9 +247,47 @@
   border-radius: 4px;
 }
 
-.editor-field input[type="file"] {
+.editor-file-input {
+  display: none;
+}
+
+.editor-file-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.1rem;
+  border: none;
+  border-radius: 4px;
+  background: #333;
+  color: #fff;
+  cursor: pointer;
+  font-family: "Aoboshi One", serif;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+}
+
+.editor-file-btn:hover {
+  background: #111;
+}
+
+.editor-file-btn:focus-visible {
+  outline: 2px solid #222;
+  outline-offset: 2px;
+}
+
+.editor-file-btn .add-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+  font-weight: 300;
+}
+
+.editor-file-name {
+  display: block;
+  margin-top: 0.35rem;
   font-family: "Antic", sans-serif;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  color: #777;
+  word-break: break-word;
 }
 
 .editor-hint {
@@ -275,8 +308,8 @@
   padding: 0.5rem 1rem;
   border: 1px solid #bbb;
   border-radius: 4px;
-  background: #fff;
-  color: #222;
+  background: #333;
+  color: #fff;
   cursor: pointer;
   font-family: "Aoboshi One", serif;
   font-size: 0.95rem;
@@ -284,7 +317,7 @@
 }
 
 .editor-btn:hover:not(:disabled) {
-  background: #f0f0f0;
+  background: #111;
 }
 
 .editor-btn:disabled {
@@ -293,13 +326,13 @@
 }
 
 .editor-save {
-  background: #222;
-  border-color: #222;
+  background: #111;
+  border-color: #111;
   color: #fff;
 }
 
 .editor-save:hover:not(:disabled) {
-  background: #444;
+  background: #111;
 }
 
 .editor-delete {
@@ -320,15 +353,13 @@
   padding: 1rem 3rem;
   font-family: "Antic", sans-serif;
   font-size: 1.2rem;
-  color: #555;
 }
 
 .auth-btn {
   padding: 0.4rem 1.2rem;
-  border: 1px solid #bbb;
+  border: 1px solid #333;
   border-radius: 4px;
-  background: #fff;
-  color: #222;
+  background: #333;
   cursor: pointer;
   font-family: "Aoboshi One", serif;
   font-size: 0.95rem;
@@ -336,8 +367,8 @@
 }
 
 .auth-btn:hover {
-  background: #f0f0f0;
-  border-color: #888;
+  background: #111;
+  border-color: #111;
 }
 
 .login-error {
@@ -346,3 +377,178 @@
   margin-bottom: 1rem;
 }
 
+.member-square {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.member-square:hover {
+  transform: translateY(-2px);
+}
+
+.member-square:focus-visible {
+  outline: 2px solid #222;
+  outline-offset: 4px;
+}
+
+.editor-facts {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.75rem 1.25rem 0.25rem;
+  margin: 1.5rem 0 0;
+}
+
+.editor-facts legend {
+  font-family: "Aoboshi One", serif;
+  font-size: 1.3rem;
+  padding: 0 0.5rem;
+}
+
+.editor-facts .editor-hint code {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.85em;
+  background: #111;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.member-popup {
+  position: relative;
+  display: flex;
+  gap: 2rem;
+  background: #222;
+  width: min(60rem, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 8px;
+  padding: 2.5rem 2rem 2rem;
+  color: #fff;
+  text-align: left;
+  padding: 2rem;
+}
+
+.member-popup-close {
+  position: absolute;
+  top: 0.6rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 2.2rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #666;
+}
+
+.member-popup-close:hover {
+  color: #000;
+}
+
+.member-popup-left {
+  flex: 0 0 18rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.member-popup-photo {
+  width: 100%;
+  height: 22rem;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #d9d9d9;
+}
+
+.member-popup-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.member-popup-photo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-family: "Antic", sans-serif;
+  color: #777;
+}
+
+.member-popup-name {
+  font-family: "Aoboshi One", serif;
+  font-size: 2rem;
+  margin: 1rem 0 0.75rem;
+}
+
+.member-popup-meta {
+  margin: 0;
+  font-family: "Antic", sans-serif;
+  font-size: 1.2rem;
+}
+
+.member-popup-meta dt {
+  font-family: "Aoboshi One", serif;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #999;
+  margin-top: 0.75rem;
+}
+
+.member-popup-meta dd {
+  margin: 0.15rem 0 0;
+}
+
+.member-popup-right {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.member-popup-facts-title {
+  font-family: "Aoboshi One", serif;
+  font-size: 1.5rem;
+  margin: 0 0 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e4e7;
+}
+
+.member-popup-facts {
+  margin: 0;
+}
+
+.member-popup-fact + .member-popup-fact {
+  margin-top: 1.1rem;
+}
+
+.member-popup-fact dt {
+  font-family: "Aoboshi One", serif;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #999;
+}
+
+.member-popup-fact dd {
+  margin: 0.15rem 0 0;
+  font-family: "Antic", sans-serif;
+  font-size: 1.2rem;
+}
+
+.member-popup-empty {
+  font-family: "Antic", sans-serif;
+  color: #999;
+}
+
+@media (max-width: 700px) {
+  .member-popup {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .member-popup-left {
+    flex: 0 0 auto;
+  }
+
+  .member-popup-photo {
+    height: 18rem;
+  }
+}

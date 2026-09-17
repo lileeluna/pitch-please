@@ -36,7 +36,6 @@
   color: #fff;
 }
 
-/* ---- Media Grid ---- */
 .media-grid-section {
   padding: 1rem;
 }
@@ -58,7 +57,9 @@
 
 .upload-cell {
   aspect-ratio: 4 / 3;
-  border-radius: 8px;
+  box-sizing: border-box;
+  border: 2px solid transparent;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,6 +68,7 @@
     border-color 0.2s,
     background 0.2s;
   background: #7b7b7b;
+  color: #fff;
 }
 
 .upload-cell:hover {
@@ -79,6 +81,10 @@
   background: #e8f0fe;
 }
 
+.upload-cell.drag-over .upload-icon {
+  color: #4a90d9;
+}
+
 .upload-cell.uploading {
   pointer-events: none;
 }
@@ -88,7 +94,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.25rem;
-  color: #999;
+  color: #fff;
 }
 
 .upload-icon span {
@@ -98,8 +104,8 @@
 }
 
 .upload-icon small {
-  font-size: 0.75rem;
-  font-family: "Aoboshi One";
+  font-size: 0.85rem;
+  font-family: "Aoboshi One", serif;
 }
 
 .upload-spinner {
@@ -117,7 +123,6 @@
   }
 }
 
-/* ---- Media Item ---- */
 .media-item {
   position: relative;
   aspect-ratio: 4 / 3;
@@ -143,7 +148,7 @@
   position: absolute;
   top: 4px;
   right: 4px;
-  background: rgba(0, 0, 0, 0.6);
+  background: #333;
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -167,7 +172,6 @@
   background: rgba(200, 0, 0, 0.8);
 }
 
-/* ---- Media Overlay (Lightbox) ---- */
 .media-overlay {
   position: fixed;
   inset: 0;
@@ -210,7 +214,6 @@
   display: block;
 }
 
-/* ---- Pagination ---- */
 .pagination {
   display: flex;
   justify-content: center;

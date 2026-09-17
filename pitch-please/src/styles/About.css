@@ -55,7 +55,7 @@
   justify-content: center;
   align-items: center;
   display: flex;
-  background: #616161;
+  background: #333;
   font-family: "Aoboshi One";
   font-size: 2rem;
   min-height: 1.5rem;
@@ -68,7 +68,7 @@
 }
 
 .row-btn:hover {
-  background: #353535;
+  background: #111;
   transition: background-color 0.2s ease-in-out;
 }
 

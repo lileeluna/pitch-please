@@ -1,6 +1,19 @@
-function MemberCard({ member, canEdit, onEdit }) {
+function MemberCard({ member, canEdit, onEdit, onView }) {
   return (
-    <div className="member-square">
+    <div
+      className="member-square"
+      onClick={() => onView(member)}
+      onKeyDown={(e) => {
+        if (e.target !== e.currentTarget) return;
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onView(member);
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`View ${member.name}`}
+    >
       <div className="member-img">
         {member.photo_url ? (
           <img src={member.photo_url} alt={member.name} loading="lazy" />
@@ -13,7 +26,10 @@ function MemberCard({ member, canEdit, onEdit }) {
         <button
           type="button"
           className="member-edit-btn"
-          onClick={() => onEdit(member)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit(member);
+          }}
           title={`Edit ${member.name}`}
         >
           Edit

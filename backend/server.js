@@ -41,6 +41,17 @@ db.exec(`
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )
 `);
+
+function ensureColumn(table, column, definition) {
+  const columns = db.prepare(`PRAGMA table_info(${table})`).all();
+  if (!columns.some((c) => c.name === column)) {
+    db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+  }
+}
+
+ensureColumn("members", "year_joined", "TEXT NOT NULL DEFAULT ''");
+ensureColumn("members", "facts", "TEXT NOT NULL DEFAULT '{}'");
+
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -351,12 +362,38 @@ app.delete("/api/media/:id", requireAuth, (req, res) => {
   res.json({ success: true });
 });
 
+function parseFacts(raw) {
+  if (!raw) return {};
+  try {
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return {};
+    }
+    return parsed;
+  } catch {
+    return {};
+  }
+}
+
+function sanitizeFacts(raw) {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
+  const clean = {};
+  for (const [key, value] of Object.entries(raw)) {
+    if (!key || typeof value !== "string") continue;
+    const trimmed = value.trim();
+    if (trimmed) clean[key] = trimmed;
+  }
+  return clean;
+}
+
 function memberToJson(row) {
   return {
     id: row.id,
     name: row.name,
     part: row.part,
     position: row.position,
+    year_joined: row.year_joined || "",
+    facts: parseFacts(row.facts),
     photo: row.photo,
     photo_url: row.photo ? `/uploads/members/${row.photo}` : null,
     sort_order: row.sort_order,
@@ -383,6 +420,8 @@ app.post("/api/members", (req, res) => {
     typeof req.body.position === "string" && req.body.position.trim()
       ? req.body.position.trim()
       : "Member";
+  const yearJoined =
+    typeof req.body.year_joined === "string" ? req.body.year_joined.trim() : "";
 
   const { m: maxSort } = db
     .prepare("SELECT MAX(sort_order) as m FROM members")
@@ -390,9 +429,17 @@ app.post("/api/members", (req, res) => {
 
   const result = db
     .prepare(
-      "INSERT INTO members (name, part, position, sort_order) VALUES (?, ?, ?, ?)",
+      `INSERT INTO members (name, part, position, year_joined, facts, sort_order)
+       VALUES (?, ?, ?, ?, ?, ?)`,
     )
-    .run(name, part, position, (maxSort ?? -1) + 1);
+    .run(
+      name,
+      part,
+      position,
+      yearJoined,
+      JSON.stringify(sanitizeFacts(req.body.facts)),
+      (maxSort ?? -1) + 1,
+    );
 
   const row = db
     .prepare("SELECT * FROM members WHERE id = ?")
@@ -416,14 +463,31 @@ app.put("/api/members/:id", (req, res) => {
     typeof req.body.position === "string" && req.body.position.trim()
       ? req.body.position.trim()
       : row.position;
+  const yearJoined =
+    typeof req.body.year_joined === "string"
+      ? req.body.year_joined.trim()
+      : row.year_joined;
+  const facts =
+    req.body.facts === undefined
+      ? parseFacts(row.facts)
+      : sanitizeFacts(req.body.facts);
 
   if (!name) {
     return res.status(400).json({ error: "Name is required." });
   }
 
   db.prepare(
-    "UPDATE members SET name = ?, part = ?, position = ? WHERE id = ?",
-  ).run(name, part, position, req.params.id);
+    `UPDATE members
+     SET name = ?, part = ?, position = ?, year_joined = ?, facts = ?
+     WHERE id = ?`,
+  ).run(
+    name,
+    part,
+    position,
+    yearJoined,
+    JSON.stringify(facts),
+    req.params.id,
+  );
 
   const updated = db
     .prepare("SELECT * FROM members WHERE id = ?")

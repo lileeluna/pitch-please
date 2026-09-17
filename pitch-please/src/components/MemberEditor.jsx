@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { MEMBER_FACTS } from "../data/memberFacts";
 
 function MemberEditor({
   mode,
@@ -14,17 +15,25 @@ function MemberEditor({
   const [name, setName] = useState(initial.name || "");
   const [part, setPart] = useState(initial.part || "");
   const [position, setPosition] = useState(initial.position || "Member");
+  const [yearJoined, setYearJoined] = useState(initial.year_joined || "");
+  const [facts, setFacts] = useState(initial.facts || {});
   const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState("");
   const [preview, setPreview] = useState(initial.photo_url || null);
   const [busy, setBusy] = useState(false);
   const fileInputRef = useRef(null);
 
   const isNew = mode === "create";
 
+  const handleFactChange = (key, value) => {
+    setFacts((prev) => ({ ...prev, [key]: value }));
+  };
+
   const handleFileChange = (e) => {
     const chosen = e.target.files && e.target.files[0];
     if (!chosen) return;
     setFile(chosen);
+    setFileName(chosen.name);
     setPreview(URL.createObjectURL(chosen));
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
@@ -42,6 +51,13 @@ function MemberEditor({
           name: name.trim(),
           part: part.trim(),
           position: position.trim() || "Member",
+          year_joined: yearJoined.trim(),
+          facts: Object.fromEntries(
+            Object.entries(facts).map(([key, value]) => [
+              key,
+              typeof value === "string" ? value.trim() : "",
+            ]),
+          ),
         },
         file || null,
       );
@@ -95,20 +111,32 @@ function MemberEditor({
           )}
         </div>
 
-        <label className="editor-field">
+        <div className="editor-field">
           <span>Photo</span>
           <input
             ref={fileInputRef}
             type="file"
             accept="image/*"
             onChange={handleFileChange}
+            className="editor-file-input"
           />
+          <button
+            type="button"
+            className="editor-file-btn"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <span className="add-icon">+</span>
+            {isNew ? "Choose Photo" : "Replace Photo"}
+          </button>
+          <small className="editor-file-name">
+            {fileName || "No file chosen"}
+          </small>
           {!isNew && (
             <em className="editor-hint">
               Pick a new image to replace the current photo.
             </em>
           )}
-        </label>
+        </div>
 
         <label className="editor-field">
           <span>Name</span>
@@ -116,7 +144,7 @@ function MemberEditor({
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="First Last"
+            placeholder="FirstName LastName"
             required
           />
         </label>
@@ -132,7 +160,7 @@ function MemberEditor({
         </label>
 
         <label className="editor-field">
-          <span>Board Position</span>
+          <span>Board Position(s)</span>
           <input
             type="text"
             value={position}
@@ -140,6 +168,38 @@ function MemberEditor({
             placeholder="e.g. Member"
           />
         </label>
+
+        <label className="editor-field">
+          <span>Year Joined</span>
+          <input
+            type="text"
+            inputMode="numeric"
+            maxLength={4}
+            value={yearJoined}
+            onChange={(e) =>
+              setYearJoined(e.target.value.replace(/\D/g, "").slice(0, 4))
+            }
+            placeholder="e.g. 2022"
+          />
+        </label>
+
+        <fieldset className="editor-facts">
+          <legend>Fun Facts &amp; Favorites</legend>
+          <p className="editor-hint">
+            These fields are defined in <code>src/data/memberFacts.js</code>.
+          </p>
+          {MEMBER_FACTS.map((fact) => (
+            <label className="editor-field" key={fact.key}>
+              <span>{fact.label}</span>
+              <input
+                type="text"
+                value={facts[fact.key] || ""}
+                onChange={(e) => handleFactChange(fact.key, e.target.value)}
+                placeholder={fact.placeholder || ""}
+              />
+            </label>
+          ))}
+        </fieldset>
 
         <div className="editor-actions">
           <button

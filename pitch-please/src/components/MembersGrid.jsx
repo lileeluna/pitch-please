@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import MemberCard from "./MemberCard";
 import MemberEditor from "./MemberEditor";
+import MemberPopup from "./MemberPopup";
 import LoginModal from "./LoginModal";
 import AuthBar from "./AuthBar";
 import useAuth from "../hooks/useAuth";
@@ -11,6 +12,8 @@ const emptyMember = {
   name: "",
   part: "",
   position: "Member",
+  year_joined: "",
+  facts: {},
   photo_url: null,
 };
 
@@ -30,6 +33,7 @@ function MembersGrid() {
   const { canEdit, username, login, logout } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [viewingId, setViewingId] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -135,6 +139,10 @@ function MembersGrid() {
   const openEdit = (member) => setEditing({ mode: "edit", member });
   const closeEditor = () => setEditing(null);
 
+  const viewingMember = members.find((m) => m.id === viewingId) || null;
+  const openView = (member) => setViewingId(member.id);
+  const closeView = () => setViewingId(null);
+
   let editingIndex = -1;
   if (editing && editing.mode === "edit") {
     editingIndex = members.findIndex((m) => m.id === editing.member.id);
@@ -164,6 +172,7 @@ function MembersGrid() {
                 member={member}
                 canEdit={canEdit}
                 onEdit={openEdit}
+                onView={openView}
               />
             ))}
 
@@ -175,7 +184,7 @@ function MembersGrid() {
                 title="Add member"
               >
                 <span className="add-icon">+</span>
-                <small>Add Member</small>
+                <small style={{color: '#ccc'}}>Add Member</small>
               </button>
             )}
 
@@ -198,6 +207,14 @@ function MembersGrid() {
           onSave={saveMember}
           onDelete={() => deleteMember(editing.member.id)}
           onClose={closeEditor}
+        />
+      )}
+
+      {viewingMember && (
+        <MemberPopup
+          key={viewingMember.id}
+          member={viewingMember}
+          onClose={closeView}
         />
       )}
 

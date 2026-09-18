@@ -6,8 +6,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/api": "http://localhost:3001",
-      "/uploads": "http://localhost:3001",
+      "/api": "https://pitch-please-yo0l.onrender.com",
+      "/uploads": "https://pitch-please-yo0l.onrender.com",
     },
   },
 });

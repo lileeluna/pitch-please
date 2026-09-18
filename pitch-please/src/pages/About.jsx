@@ -1,9 +1,14 @@
 import image from "../assets/about.jpg";
 import "../styles/About.css";
+import "../styles/Repertoire.css";
 import { useState } from "react";
+import useAuth from "../hooks/useAuth";
+import AuthBar from "../components/AuthBar";
+import RepertoireGrid from "../components/RepertoireGrid";
 
 function About() {
   const [tab, setTab] = useState("about");
+  const { canEdit, username, logout } = useAuth();
   return (
     <>
       <div className="about-container">
@@ -61,7 +66,23 @@ function About() {
             </div>
           )}
           {tab === "repertoire" && (
-            <div className="tab-text">This is the repertoire tab.</div>
+            <>
+              <AuthBar
+                canEdit={canEdit}
+                username={username}
+                onLogout={logout}
+              />
+              <RepertoireGrid
+                status="current"
+                title="Current Repertoire"
+                canEdit={canEdit}
+              />
+              <RepertoireGrid
+                status="past"
+                title="Past Repertoire"
+                canEdit={canEdit}
+              />
+            </>
           )}
         </section>
       </div>

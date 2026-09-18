@@ -56,6 +56,20 @@ ensureColumn("members", "is_alumni", "INTEGER NOT NULL DEFAULT 0");
 ensureColumn("members", "year_graduated", "TEXT NOT NULL DEFAULT ''");
 
 db.exec(`
+  CREATE TABLE IF NOT EXISTS repertoire (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    original_artist TEXT NOT NULL DEFAULT '',
+    arranger TEXT NOT NULL DEFAULT '',
+    soloists TEXT NOT NULL DEFAULT '',
+    recording_url TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'current' CHECK(status IN ('current', 'past')),
+    sort_order INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
+db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
@@ -421,8 +435,6 @@ app.get("/api/members", (req, res) => {
   res.json({ members: listMembers(false) });
 });
 
-// Alumni are the same records with is_alumni = 1. The response keeps the
-// { members: [...] } shape so the client grid code works for both.
 app.get("/api/alumni", (req, res) => {
   res.json({ members: listMembers(true) });
 });
@@ -616,6 +628,163 @@ app.delete("/api/members/:id", (req, res) => {
   }
 
   db.prepare("DELETE FROM members WHERE id = ?").run(req.params.id);
+  res.json({ success: true });
+});
+
+function trimText(value) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function normalizeRepertoireStatus(value) {
+  return value === "past" ? "past" : "current";
+}
+
+function repertoireToJson(row) {
+  return {
+    id: row.id,
+    title: row.title,
+    original_artist: row.original_artist || "",
+    arranger: row.arranger || "",
+    soloists: row.soloists || "",
+    recording_url: row.recording_url || "",
+    status: normalizeRepertoireStatus(row.status),
+    sort_order: row.sort_order,
+    created_at: row.created_at,
+  };
+}
+
+function listRepertoire(status) {
+  return db
+    .prepare(
+      `SELECT * FROM repertoire
+       WHERE status = ?
+       ORDER BY sort_order ASC, id ASC`,
+    )
+    .all(status)
+    .map(repertoireToJson);
+}
+
+app.get("/api/repertoire", (req, res) => {
+  res.json({
+    current: listRepertoire("current"),
+    past: listRepertoire("past"),
+  });
+});
+
+app.use("/api/repertoire", requireAuth);
+
+app.post("/api/repertoire", (req, res) => {
+  const title = trimText(req.body.title);
+  if (!title) {
+    return res.status(400).json({ error: "Title is required." });
+  }
+
+  const status = normalizeRepertoireStatus(req.body.status);
+
+  const { m: maxSort } = db
+    .prepare("SELECT MAX(sort_order) as m FROM repertoire WHERE status = ?")
+    .get(status);
+
+  const result = db
+    .prepare(
+      `INSERT INTO repertoire
+         (title, original_artist, arranger, soloists, recording_url, status, sort_order)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    )
+    .run(
+      title,
+      trimText(req.body.original_artist),
+      trimText(req.body.arranger),
+      trimText(req.body.soloists),
+      trimText(req.body.recording_url),
+      status,
+      (maxSort ?? -1) + 1,
+    );
+
+  const row = db
+    .prepare("SELECT * FROM repertoire WHERE id = ?")
+    .get(result.lastInsertRowid);
+  res.status(201).json(repertoireToJson(row));
+});
+
+app.put("/api/repertoire/:id", (req, res) => {
+  const row = db
+    .prepare("SELECT * FROM repertoire WHERE id = ?")
+    .get(req.params.id);
+  if (!row) {
+    return res.status(404).json({ error: "Repertoire item not found." });
+  }
+
+  const title =
+    req.body.title === undefined ? row.title : trimText(req.body.title);
+  if (!title) {
+    return res.status(400).json({ error: "Title is required." });
+  }
+
+  const status =
+    req.body.status === undefined
+      ? normalizeRepertoireStatus(row.status)
+      : normalizeRepertoireStatus(req.body.status);
+
+  let sortOrder = row.sort_order;
+  if (status !== row.status) {
+    const { m: maxSort } = db
+      .prepare("SELECT MAX(sort_order) as m FROM repertoire WHERE status = ?")
+      .get(status);
+    sortOrder = (maxSort ?? -1) + 1;
+  }
+
+  db.prepare(
+    `UPDATE repertoire
+     SET title = ?, original_artist = ?, arranger = ?, soloists = ?,
+         recording_url = ?, status = ?, sort_order = ?
+     WHERE id = ?`,
+  ).run(
+    title,
+    req.body.original_artist === undefined
+      ? row.original_artist
+      : trimText(req.body.original_artist),
+    req.body.arranger === undefined
+      ? row.arranger
+      : trimText(req.body.arranger),
+    req.body.soloists === undefined
+      ? row.soloists
+      : trimText(req.body.soloists),
+    req.body.recording_url === undefined
+      ? row.recording_url
+      : trimText(req.body.recording_url),
+    status,
+    sortOrder,
+    req.params.id,
+  );
+
+  const updated = db
+    .prepare("SELECT * FROM repertoire WHERE id = ?")
+    .get(req.params.id);
+  res.json(repertoireToJson(updated));
+});
+
+app.post("/api/repertoire/reorder", (req, res) => {
+  const ids = req.body.ids;
+  if (!Array.isArray(ids)) {
+    return res.status(400).json({ error: "An ordered ids array is required." });
+  }
+  const update = db.prepare("UPDATE repertoire SET sort_order = ? WHERE id = ?");
+  const applyOrder = db.transaction((orderedIds) => {
+    orderedIds.forEach((id, index) => update.run(index, id));
+  });
+  applyOrder(ids);
+  res.json({ success: true });
+});
+
+app.delete("/api/repertoire/:id", (req, res) => {
+  const row = db
+    .prepare("SELECT * FROM repertoire WHERE id = ?")
+    .get(req.params.id);
+  if (!row) {
+    return res.status(404).json({ error: "Repertoire item not found." });
+  }
+  db.prepare("DELETE FROM repertoire WHERE id = ?").run(req.params.id);
   res.json({ success: true });
 });
 

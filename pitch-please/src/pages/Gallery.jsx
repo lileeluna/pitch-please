@@ -14,13 +14,13 @@ function Gallery() {
       <div className="gallery-title">Gallery</div>
       <AuthBar canEdit={canEdit} username={username} onLogout={logout} />
       <section className="photos">
-        <div className="section-header">Photos</div>
+        {/* <div className="section-header">Photos</div> */}
         <MediaGrid type="photo" canEdit={canEdit} />
       </section>
-      <section className="videos">
+      {/* <section className="videos">
         <div className="section-header">Videos</div>
         <MediaGrid type="video" canEdit={canEdit} />
-      </section>
+      </section> */}
     </>
   );
 }

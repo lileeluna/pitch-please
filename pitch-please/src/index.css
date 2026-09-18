@@ -49,12 +49,14 @@
 body {
   margin: 0;
   overflow-y: scroll;
+}
+
+* {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
-/* Chrome, Safari, Opera */
-body::-webkit-scrollbar {
+*::-webkit-scrollbar {
   display: none;
 }
 

@@ -45,6 +45,7 @@ function UploadCell({ type, onUpload }) {
       const res = await fetch(`${API_BASE}/api/upload`, {
         method: "POST",
         body: formData,
+        credentials: "include",
       });
 
       if (!res.ok) {

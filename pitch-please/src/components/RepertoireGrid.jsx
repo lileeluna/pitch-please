@@ -22,7 +22,7 @@ function RepertoireGrid({ status, title, canEdit }) {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`${API_BASE}${ITEMS_URL}`)
+    fetch(`${API_BASE}${ITEMS_URL}`, { credentials: "include" })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch");
         return res.json();
@@ -49,6 +49,7 @@ function RepertoireGrid({ status, title, canEdit }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(fields),
+        credentials: "include",
       });
       if (!res.ok) {
         throw new Error(await parseError(res, "Create failed."));
@@ -63,6 +64,7 @@ function RepertoireGrid({ status, title, canEdit }) {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(fields),
+        credentials: "include",
       });
       if (!res.ok) {
         throw new Error(await parseError(res, "Update failed."));
@@ -79,6 +81,7 @@ function RepertoireGrid({ status, title, canEdit }) {
   const deleteItem = async (id) => {
     const res = await fetch(`${API_BASE}${ITEMS_URL}/${id}`, {
       method: "DELETE",
+      credentials: "include",
     });
     if (!res.ok) {
       throw new Error(await parseError(res, "Delete failed."));
@@ -103,6 +106,7 @@ function RepertoireGrid({ status, title, canEdit }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status, ids: reordered.map((item) => item.id) }),
+        credentials: "include",
       });
       if (!res.ok) throw new Error("Reorder failed.");
     } catch (err) {

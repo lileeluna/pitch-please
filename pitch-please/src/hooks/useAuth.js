@@ -8,7 +8,7 @@ function useAuth() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`${API_BASE}/api/auth/status`)
+    fetch(`${API_BASE}/api/auth/status`, { credentials: "include" })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (cancelled) return;
@@ -34,7 +34,10 @@ function useAuth() {
 
   const logout = async () => {
     try {
-      await fetch(`${API_BASE}/api/auth/logout`, { method: "POST" });
+      await fetch(`${API_BASE}/api/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
     } catch {
       console.warn("Logout request failed; clearing local session state.");
     }

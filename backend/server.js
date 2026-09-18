@@ -99,11 +99,27 @@ if (userCount === 0) {
 }
 
 const app = express();
-app.use(cors());
+
+const allowedOrigins = (process.env.CORS_ORIGIN || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+app.use(
+  cors({
+    origin: allowedOrigins.length > 0 ? allowedOrigins : true,
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 const SESSION_COOKIE = "pp_session";
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+const SESSION_SAME_SITE = process.env.COOKIE_SAME_SITE || "Lax";
+const SESSION_COOKIE_SECURE =
+  SESSION_SAME_SITE.toLowerCase() === "none" ||
+  process.env.NODE_ENV === "production";
 
 function hashPassword(password, salt = crypto.randomBytes(16).toString("hex")) {
   const hash = crypto.scryptSync(password, salt, 64).toString("hex");
@@ -160,10 +176,22 @@ function requireAuth(req, res, next) {
   next();
 }
 
+function cookieAttributes() {
+  const attrs = ["HttpOnly", "Path=/", `SameSite=${SESSION_SAME_SITE}`];
+  if (SESSION_COOKIE_SECURE) attrs.push("Secure");
+  return attrs;
+}
+
 function sessionCookie(token) {
-  return `${SESSION_COOKIE}=${token}; HttpOnly; Path=/; SameSite=Lax; Max-Age=${Math.floor(
-    SESSION_TTL_MS / 1000,
-  )}`;
+  return [
+    `${SESSION_COOKIE}=${token}`,
+    ...cookieAttributes(),
+    `Max-Age=${Math.floor(SESSION_TTL_MS / 1000)}`,
+  ].join("; ");
+}
+
+function clearedSessionCookie() {
+  return [`${SESSION_COOKIE}=`, ...cookieAttributes(), "Max-Age=0"].join("; ");
 }
 
 app.post("/api/auth/login", (req, res) => {
@@ -195,7 +223,7 @@ app.post("/api/auth/logout", (req, res) => {
   if (token) {
     db.prepare("DELETE FROM sessions WHERE token = ?").run(token);
   }
-  res.setHeader("Set-Cookie", `${SESSION_COOKIE}=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0`);
+  res.setHeader("Set-Cookie", clearedSessionCookie());
   res.json({ success: true });
 });
 
@@ -791,6 +819,15 @@ app.delete("/api/repertoire/:id", (req, res) => {
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
 });
+
+const clientDistDir = path.join(__dirname, "..", "pitch-please", "dist");
+if (fs.existsSync(clientDistDir)) {
+  app.use(express.static(clientDistDir));
+
+  app.get(/^(?!\/(?:api|uploads)(?:\/|$)).*/, (req, res) => {
+    res.sendFile(path.join(clientDistDir, "index.html"));
+  });
+}
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

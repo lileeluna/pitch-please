@@ -13,7 +13,9 @@ function MediaGrid({ type, canEdit }) {
   useEffect(() => {
     const key = ++fetchKey.current;
 
-    fetch(`${API_BASE}/api/media?type=${type}&page=${page}&limit=12`)
+    fetch(`${API_BASE}/api/media?type=${type}&page=${page}&limit=12`, {
+      credentials: "include",
+    })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch");
         return res.json();

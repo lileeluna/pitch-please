@@ -32,7 +32,7 @@ function MemberGrid({
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`${API_BASE}${listUrl}`)
+    fetch(`${API_BASE}${listUrl}`, { credentials: "include" })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch");
         return res.json();
@@ -60,6 +60,7 @@ function MemberGrid({
     const res = await fetch(`${API_BASE}${ITEMS_URL}/${id}/photo`, {
       method: "POST",
       body: formData,
+      credentials: "include",
     });
     if (!res.ok) {
       throw new Error(await parseError(res, "Photo upload failed."));
@@ -75,6 +76,7 @@ function MemberGrid({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        credentials: "include",
       });
       if (!res.ok) {
         throw new Error(await parseError(res, "Create failed."));
@@ -88,6 +90,7 @@ function MemberGrid({
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        credentials: "include",
       });
       if (!res.ok) {
         throw new Error(await parseError(res, "Update failed."));
@@ -101,6 +104,7 @@ function MemberGrid({
   const deleteItem = async (id) => {
     const res = await fetch(`${API_BASE}${ITEMS_URL}/${id}`, {
       method: "DELETE",
+      credentials: "include",
     });
     if (!res.ok) {
       throw new Error(await parseError(res, "Delete failed."));
@@ -124,6 +128,7 @@ function MemberGrid({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ids: reordered.map((m) => m.id) }),
+        credentials: "include",
       });
       if (!res.ok) throw new Error("Reorder failed.");
     } catch (err) {

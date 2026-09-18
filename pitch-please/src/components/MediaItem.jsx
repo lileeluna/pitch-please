@@ -10,6 +10,7 @@ function MediaItem({ item, type, canEdit, onDelete }) {
     try {
       const res = await fetch(`${API_BASE}/api/media/${item.id}`, {
         method: "DELETE",
+        credentials: "include",
       });
       if (res.ok) {
         onDelete(item.id);

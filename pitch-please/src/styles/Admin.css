@@ -1,0 +1,115 @@
+.admin-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 55vh;
+  padding: 3rem 1.5rem;
+}
+
+.admin-card {
+  width: min(28rem, 100%);
+  background: #111;
+  border-radius: 8px;
+  padding: 2.5rem 2rem 2rem;
+  text-align: left;
+  box-shadow: rgba(0, 0, 0, 0.15) 0 10px 25px -5px;
+}
+
+.admin-title {
+  font-family: "Aoboshi One", serif;
+  font-size: 2rem;
+  letter-spacing: normal;
+  margin: 0 0 1.5rem;
+}
+
+.admin-subtitle {
+  font-family: "Antic", sans-serif;
+  font-size: 1.15rem;
+  margin-bottom: 1.25rem;
+}
+
+.admin-field {
+  display: block;
+  margin-bottom: 1rem;
+  font-family: "Antic", sans-serif;
+}
+
+.admin-field > span {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.admin-field input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.75rem;
+  font-family: "Antic", sans-serif;
+  font-size: 1.1rem;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+}
+
+.admin-error {
+  font-family: "Antic", sans-serif;
+  color: #b30000;
+  margin-top: 1rem;
+}
+
+.admin-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-link {
+  font-family: "Aoboshi One", serif;
+  font-size: 0.95rem;
+  color: #222;
+  text-decoration: underline;
+}
+
+.admin-link:hover {
+  color: #777;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.admin-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  background: #fff;
+  color: #222;
+  cursor: pointer;
+  font-family: "Aoboshi One", serif;
+  font-size: 0.95rem;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.admin-btn:hover:not(:disabled) {
+  background: #f0f0f0;
+}
+
+.admin-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.admin-btn-primary {
+  background: #222;
+  border-color: #222;
+  color: #fff;
+}
+
+.admin-btn-primary:hover:not(:disabled) {
+  background: #444;
+}

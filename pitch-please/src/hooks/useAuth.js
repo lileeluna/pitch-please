@@ -5,6 +5,7 @@ const API_BASE = "";
 function useAuth() {
   const [canEdit, setCanEdit] = useState(false);
   const [username, setUsername] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
@@ -14,11 +15,13 @@ function useAuth() {
         if (cancelled) return;
         setCanEdit(Boolean(data && data.authorized));
         setUsername(data && data.authorized ? data.username : null);
+        setLoading(false);
       })
       .catch(() => {
         if (cancelled) return;
         setCanEdit(false);
         setUsername(null);
+        setLoading(false);
       });
     return () => {
       cancelled = true;
@@ -40,7 +43,7 @@ function useAuth() {
     setCanEdit(false);
   };
 
-  return { canEdit, username, login, logout };
+  return { canEdit, username, loading, login, logout };
 }
 
 export default useAuth;

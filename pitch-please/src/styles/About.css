@@ -77,12 +77,38 @@
 }
 
 .tab-content {
-  padding: 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
+  padding-top: 0.5rem;
   min-height: 200px;
 }
 
 .tab-text {
-  font-family: "Aoboshi One";
+  font-family: "Antic";
   font-size: 1.5rem;
   color: #ffffff;
+  padding-left: 5rem;
+  padding-right: 5rem;
+}
+
+.tab-text div {
+  padding-bottom: 1rem;
+}
+
+.qna {
+  text-align: left;
+  padding-top: 2rem;
+}
+
+.qna p {
+  padding-bottom: 1rem;
+  font-style: bold;
+  font-size: 1.4rem;
+}
+
+.qna div {
+  padding-bottom: 1rem;
+  font-size: 1.3rem;
+  color: rgb(163, 60, 102);
 }

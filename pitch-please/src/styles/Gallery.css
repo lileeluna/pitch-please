@@ -67,13 +67,12 @@
   transition:
     border-color 0.2s,
     background 0.2s;
-  background: #7b7b7b;
-  color: #fff;
+  background: #333;
+  color: #0000008c;
 }
 
 .upload-cell:hover {
-  border-color: #555555;
-  background: #656565;
+  background: #111;
 }
 
 .upload-cell.drag-over {

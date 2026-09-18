@@ -43,3 +43,29 @@
   justify-self: left;
   padding-left: 6rem;
 }
+
+.info-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 3rem;
+  padding: 2rem 6rem;
+}
+
+.audition {
+  width: 40%;
+  max-width: 500px;
+  object-fit: cover;
+  border-radius: 1rem;
+}
+
+.info-text {
+  flex: 1;
+  font-family: "Antic";
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+
+.info-text div {
+  padding-bottom: 1rem;
+}

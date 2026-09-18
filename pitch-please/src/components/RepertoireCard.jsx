@@ -34,7 +34,7 @@ function RepertoireCard({ item, canEdit, onEdit }) {
               target="_blank"
               rel="noreferrer"
             >
-              Listen &rarr;
+              Listen
             </a>
           </div>
         ) : null}

@@ -1,5 +1,9 @@
 backend/node_modules
+pitch-please/node_modules
 backend/data/*
 backend/uploads/members/*
 backend/uploads/photos/*
 backend/uploads/videos/*
+
+pitch-please/.env.local
+pitch-please/.env.*.local

@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { assetUrl } from "../config";
 
 function MemberPopup({ member, factsConfig, onClose }) {
   useEffect(() => {
@@ -42,7 +43,7 @@ function MemberPopup({ member, factsConfig, onClose }) {
         <div className="member-popup-left">
           <div className="member-popup-photo">
             {member.photo_url ? (
-              <img src={member.photo_url} alt={member.name} />
+              <img src={assetUrl(member.photo_url)} alt={member.name} />
             ) : (
               <div className="member-popup-photo-placeholder">No photo</div>
             )}

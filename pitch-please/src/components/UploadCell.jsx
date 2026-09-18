@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
-
-const API_BASE = "";
+import { API_BASE } from "../config";
 
 function UploadCell({ type, onUpload }) {
   const [dragging, setDragging] = useState(false);

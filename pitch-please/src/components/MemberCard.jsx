@@ -1,3 +1,5 @@
+import { assetUrl } from "../config";
+
 function MemberCard({ member, canEdit, onEdit, onView }) {
   return (
     <div
@@ -16,7 +18,11 @@ function MemberCard({ member, canEdit, onEdit, onView }) {
     >
       <div className="member-img">
         {member.photo_url ? (
-          <img src={member.photo_url} alt={member.name} loading="lazy" />
+          <img
+            src={assetUrl(member.photo_url)}
+            alt={member.name}
+            loading="lazy"
+          />
         ) : null}
       </div>
       <div className="member-name">{member.name}</div>

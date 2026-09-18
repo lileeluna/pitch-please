@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { assetUrl } from "../config";
 
 function MemberEditor({
   mode,
@@ -24,7 +25,9 @@ function MemberEditor({
   const [facts, setFacts] = useState(initial.facts || {});
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("");
-  const [preview, setPreview] = useState(initial.photo_url || null);
+  const [preview, setPreview] = useState(
+    assetUrl(initial.photo_url) || null,
+  );
   const [busy, setBusy] = useState(false);
   const fileInputRef = useRef(null);
 

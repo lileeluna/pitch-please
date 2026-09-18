@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import UploadCell from "./UploadCell";
 import MediaItem from "./MediaItem";
-
-const API_BASE = "";
+import { API_BASE } from "../config";
 
 function MediaGrid({ type, canEdit }) {
   const [items, setItems] = useState([]);

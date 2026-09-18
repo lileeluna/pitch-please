@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import RepertoireCard from "./RepertoireCard";
 import RepertoireEditor from "./RepertoireEditor";
-
-const API_BASE = "";
+import { API_BASE } from "../config";
 
 const ITEMS_URL = "/api/repertoire";
 

@@ -1,6 +1,5 @@
 import { useState } from "react";
-
-const API_BASE = "";
+import { API_BASE } from "../config";
 
 function MediaItem({ item, type, canEdit, onDelete }) {
   const [expanded, setExpanded] = useState(false);

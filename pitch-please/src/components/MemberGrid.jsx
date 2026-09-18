@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import MemberCard from "./MemberCard";
 import MemberEditor from "./MemberEditor";
 import MemberPopup from "./MemberPopup";
-
-const API_BASE = "";
+import { API_BASE } from "../config";
 
 const ITEMS_URL = "/api/members";
 

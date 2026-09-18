@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import "../styles/Admin.css";
-
-const API_BASE = "";
+import { API_BASE } from "../config";
 
 function Admin() {
   const { canEdit, username, loading, login, logout } = useAuth();

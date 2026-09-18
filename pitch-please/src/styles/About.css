@@ -112,3 +112,13 @@
   font-size: 1.3rem;
   color: rgb(163, 60, 102);
 }
+
+.contact-us-link {
+  color: rgb(163, 60, 102);
+  text-decoration: underline;
+  transition: color 0.2s ease-in-out;
+}
+
+.contact-us-link:hover {
+  color: #d47ba4;
+}

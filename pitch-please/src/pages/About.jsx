@@ -2,6 +2,7 @@ import image from "../assets/about.jpg";
 import "../styles/About.css";
 import "../styles/Repertoire.css";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import AuthBar from "../components/AuthBar";
 import RepertoireGrid from "../components/RepertoireGrid";
@@ -61,7 +62,13 @@ function About() {
                 <div>We normally rehearse as a full group twice a week for 2 hours, and we have smaller sectional rehearsals once a week for an hour. As we get closer to competition season it'll be a little more hectic.</div>
                 <p>I've been invited to callbacks! Will having a conflict with another group's callbacks affect my chances of being accepted into either group? Would I need to pick one or the other?</p>
                 <div>Of course not! There's so many groups here on campus that overlaps are almost always guaranteed. In fact, most of the a cappella groups with callback overlap usually coordinate with each other for a good time someone would need to leave one group's callbacks to attend another. When you receive your invitations just make sure to let us know about your conflict and we'll be able to tell you how it can work out. No need to worry!</div>
-                <p style={{fontFamily: 'Aoboshi One'}}>If you have any other questions, feel free to contact us.</p>
+                <p style={{fontFamily: 'Aoboshi One'}}>
+                  If you have any other questions, feel free to{" "}
+                  <Link to="/contact-us" className="contact-us-link">
+                    contact us
+                  </Link>
+                  .
+                </p>
               </div>
             </div>
           )}

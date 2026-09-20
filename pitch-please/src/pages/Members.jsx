@@ -12,6 +12,7 @@ function Members() {
         <img src={front} className="front-img"></img>
       </div>
       <MembersGrid />
+      <div style={{paddingBottom: "1rem"}}>Are you a Pitch alum? Want to be featured on the page? Fill out <a href="https://forms.gle/o9WH6PteWicQqjaH7">this form</a> and send a photo of yourself to <a href="mailto:pitchpleaseucla@gmail.com">pitchpleaseucla@gmail.com</a> to be added!</div>
     </>
   );
 }

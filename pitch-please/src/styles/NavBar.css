@@ -70,3 +70,64 @@
 p {
   color: white;
 }
+
+@media (max-width: 820px) {
+  .navbar {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+  }
+
+  .logo {
+    justify-content: center;
+    padding: 0.4rem 0.75rem;
+  }
+
+  .icon {
+    height: 38px;
+  }
+
+  .text {
+    flex: 0 1 auto;
+    font-size: 24px;
+  }
+
+  .tabs {
+    width: 100%;
+    height: auto;
+  }
+
+  .tab {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    height: 2.75rem;
+  }
+
+  .tab a {
+    padding: 0 0.15rem;
+    text-align: center;
+  }
+
+  .tab p {
+    font-size: 0.95rem;
+    line-height: 1.15;
+  }
+}
+
+@media (max-width: 380px) {
+  .tab p {
+    font-size: 0.8rem;
+  }
+}
+
+@media (hover: none) {
+  .tab:hover {
+    background-color: transparent;
+  }
+
+  .tab:active {
+    background-color: #60132e;
+  }
+}
+

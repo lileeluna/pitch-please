@@ -155,3 +155,59 @@
   font-size: 1rem;
   width: 100%;
 }
+
+.contact-title {
+  font-size: clamp(1.6rem, 7vw, 4rem);
+}
+
+.contact-text-overlay {
+  padding-left: clamp(1rem, 4vw, 2.8rem);
+  box-sizing: border-box;
+}
+
+.half-row,
+.full-row {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .contact-content {
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 2rem;
+  }
+
+  .contact-left {
+    width: 100%;
+    padding: 0 1.25rem 1.25rem;
+    box-sizing: border-box;
+  }
+
+  .contact-right {
+    padding: 0 1.25rem 2rem;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 700px) {
+  .contact-image,
+  .contact-image-overlay {
+    height: 8rem;
+  }
+
+  .contact-text-overlay {
+    padding-top: 3.6rem;
+  }
+
+  .contact-title {
+    font-size: clamp(1.5rem, 9vw, 2.5rem);
+  }
+}
+
+@media (max-width: 400px) {
+  .input-row,
+  .header-row {
+    gap: 0.5rem;
+  }
+}
+

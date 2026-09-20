@@ -34,12 +34,6 @@
   letter-spacing: 30%;
 }
 
-.upcoming-title {
-  font-family: "Kumar One Outline";
-  justify-self: left;
-  padding-left: 6rem;
-}
-
 .tab-row {
   padding-top: 2rem;
   display: flex;
@@ -121,4 +115,63 @@
 
 .contact-us-link:hover {
   color: #d47ba4;
+}
+
+.about-image {
+  height: clamp(18rem, 70vw, 50rem);
+}
+
+.about-text-overlay {
+  padding-top: clamp(1.5rem, 5vw, 4rem);
+}
+
+.about-text-overlay .title,
+.about-title {
+  font-size: clamp(2rem, 11vw, 6.7rem);
+}
+
+@media (max-width: 1024px) {
+  .tab-row {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+  }
+
+  .row-btn {
+    width: 100%;
+    min-width: 0;
+    font-size: 1.5rem;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 700px) {
+  .row-btn {
+    font-size: 1.15rem;
+    padding: 0.85rem;
+    border-radius: 0.75rem;
+  }
+
+  .tab-content {
+    padding: 0.5rem 1rem 2rem;
+  }
+
+  .tab-text {
+    font-size: 1.1rem;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+
+  .qna {
+    padding-top: 1.25rem;
+  }
+
+  .qna p {
+    font-size: 1.15rem;
+  }
+
+  .qna div {
+    font-size: 1.05rem;
+  }
 }

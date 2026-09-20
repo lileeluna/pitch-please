@@ -312,3 +312,58 @@
     padding: 0 1.5rem 2rem;
   }
 }
+
+.repertoire-section-title {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.repertoire-editor {
+  margin: auto;
+  max-height: 90vh;
+  max-height: 90dvh;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 1024px) {
+  .repertoire-list {
+    padding: 0 2rem 2rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .repertoire-list {
+    padding: 0 1.25rem 2rem;
+  }
+
+  .repertoire-card {
+    padding: 1.25rem;
+  }
+
+  .repertoire-title {
+    font-size: 1.5rem;
+    padding-right: 3.5rem;
+  }
+
+  .repertoire-detail {
+    font-size: 1.1rem;
+  }
+
+  .repertoire-detail-label {
+    flex: 0 0 5rem;
+  }
+
+  .repertoire-editor {
+    padding: 2rem 1.25rem 1.5rem;
+  }
+
+  .repertoire-editor-title {
+    font-size: 1.6rem;
+  }
+}
+
+@media (hover: none) {
+  .repertoire-edit-btn {
+    opacity: 1;
+  }
+}
+

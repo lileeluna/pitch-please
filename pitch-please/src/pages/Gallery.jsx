@@ -8,13 +8,14 @@ function Gallery() {
 
   return (
     <>
-      <div className="gallery-container">
-        <div className="gallery-overlay"></div>
+      <div className="gallery-hero">
+        <div className="gallery-container">
+          <div className="gallery-overlay"></div>
+        </div>
+        <div className="gallery-title">Gallery</div>
       </div>
-      <div className="gallery-title">Gallery</div>
       <AuthBar canEdit={canEdit} username={username} onLogout={logout} />
       <section className="photos">
-        {/* <div className="section-header">Photos</div> */}
         <MediaGrid type="photo" canEdit={canEdit} />
       </section>
       {/* <section className="videos">

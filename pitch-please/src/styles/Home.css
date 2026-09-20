@@ -69,3 +69,66 @@
 .info-text div {
   padding-bottom: 1rem;
 }
+
+.title {
+  font-size: clamp(1.75rem, 9vw, 6.7rem);
+}
+
+.subtitle {
+  font-size: clamp(1rem, 3.2vw, 2rem);
+  padding-left: clamp(0rem, 3vw, 3rem);
+  letter-spacing: 1.5em;
+}
+
+.upcoming-title {
+  font-size: clamp(1.15rem, 5vw, 56px);
+  padding-left: clamp(1rem, 6vw, 6rem);
+}
+
+@media (max-width: 1024px) {
+  .info-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+    padding: 2rem 3rem;
+  }
+
+  .audition {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .info-text {
+    font-size: 1.25rem;
+  }
+
+  .subtitle {
+    letter-spacing: 1em;
+  }
+}
+
+@media (max-width: 700px) {
+  .home-text-overlay {
+    padding-top: clamp(1.5rem, 7vw, 2.5rem);
+  }
+
+  .title {
+    padding-top: 0.25rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .subtitle {
+    padding-left: 0;
+    letter-spacing: 0.35em;
+  }
+
+  .info-section {
+    padding: 1.25rem;
+    gap: 1.25rem;
+  }
+
+  .info-text {
+    font-size: 1.1rem;
+  }
+}
+
